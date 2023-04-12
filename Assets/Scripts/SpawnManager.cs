@@ -5,21 +5,25 @@ using UnityEngine;
 public class SpawnManager : MonoBehaviour
 {
     public GameObject wallPrefab;
+    private PlayerController playerControllerScript;
 
     // Start is called before the first frame update
     void Start()
     {
-        InvokeRepeating("InstantiateWall", 2, 2);
+        playerControllerScript = GameObject.Find("Player").GetComponent<PlayerController>();
+
+        StartCoroutine(InstantiateWall(1));
     }
 
-    // Update is called once per frame
-    void Update()
+    IEnumerator InstantiateWall(int delay)
     {
-        
-    }
+        yield return new WaitForSeconds(delay);
 
-    void InstantiateWall()
-    {
-        Instantiate(wallPrefab, new Vector3(30, Random.Range(4, 10), -2), wallPrefab.transform.rotation);
+        if (playerControllerScript.isGameActive)
+        {
+            Instantiate(wallPrefab, new Vector3(30, Random.Range(4, 10), -2), wallPrefab.transform.rotation);
+
+            StartCoroutine(InstantiateWall(2));
+        }
     }
 }

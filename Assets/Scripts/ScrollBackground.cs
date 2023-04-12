@@ -6,16 +6,21 @@ public class ScrollBackground : MonoBehaviour
 {
     private Renderer rend;
     private float speed = 0.1f;
+    private PlayerController playerControllerScript;
 
     // Start is called before the first frame update
     void Start()
     {
         rend = gameObject.GetComponent<Renderer>();
+        playerControllerScript = GameObject.Find("Player").GetComponent<PlayerController>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        rend.material.mainTextureOffset -= new Vector2(Time.deltaTime * speed, rend.material.mainTextureOffset.y);
+        if (playerControllerScript.isGameActive)
+        {
+            rend.material.mainTextureOffset -= new Vector2(Time.deltaTime * speed, rend.material.mainTextureOffset.y);
+        }
     }
 }
