@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class SpawnManager : MonoBehaviour
@@ -12,18 +11,24 @@ public class SpawnManager : MonoBehaviour
     {
         playerControllerScript = GameObject.Find("Player").GetComponent<PlayerController>();
 
-        StartCoroutine(InstantiateWall(1));
+        StartCoroutine(InstantiateWall());
     }
 
-    IEnumerator InstantiateWall(int delay)
+    IEnumerator InstantiateWall(int delay = 0, float yScale = 2.0f)
     {
         yield return new WaitForSeconds(delay);
 
         if (playerControllerScript.isGameActive)
         {
-            Instantiate(wallPrefab, new Vector3(30, Random.Range(4, 10), -2), wallPrefab.transform.rotation);
+            GameObject wall = Instantiate(wallPrefab, new Vector3(30, Random.Range(-3, 3), -2), wallPrefab.transform.rotation);
 
-            StartCoroutine(InstantiateWall(2));
+            // adjust the wall gap
+            wall.transform.localScale = new Vector3(1.0f, yScale, 1.0f);
+
+            // the 14th wall is the minimum gap size; after that the gap is constant
+            float nextYScale = Mathf.Max(0.7f, yScale - 0.1f);
+
+            StartCoroutine(InstantiateWall(2, nextYScale));
         }
     }
 }
