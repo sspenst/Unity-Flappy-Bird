@@ -11,7 +11,7 @@ public class PlayerController : MonoBehaviour
     public bool isGameActive = true;
 
     private const float jumpForce = 18.0f;
-    private const float yMax = 5.0f;
+    private const float yMax = 6.0f;
 
     private Rigidbody rb;
     private int score = 0;
@@ -19,9 +19,12 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        rb = GetComponent<Rigidbody>();
         gameOverPanel.SetActive(false);
         SetHighScoreText();
+        rb = GetComponent<Rigidbody>();
+
+        // start the player with some upward force to give more time to react
+        rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
     }
 
     // Update is called once per frame
@@ -50,8 +53,11 @@ public class PlayerController : MonoBehaviour
     {
         if (other.CompareTag("Opening"))
         {
-            score++;
-            scoreText.text = "Score: " + score;
+            if (isGameActive)
+            {
+                score++;
+                scoreText.text = "Score: " + score;
+            }
         }
         else if (other.CompareTag("Wall"))
         {
@@ -73,6 +79,11 @@ public class PlayerController : MonoBehaviour
     }
 
     public void Restart()
+    {
+        SceneManager.LoadScene(1);
+    }
+
+    public void Menu()
     {
         SceneManager.LoadScene(0);
     }
